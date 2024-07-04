@@ -27,7 +27,8 @@ include("logrange.jl")
 export logrange
 
 include("chirps.jl")
-export chirp
+export chirp    # Chirp Function for generation of signal
+export Chirp    # Data Type Struct of type Chirp
 
 include("heaviside.jl")
 export stepfunction
