@@ -19,7 +19,8 @@ signal::Chirp = chirp(f_start::T where T<: Real,
                       cycles::Int64, 
                       type::String,
                       fs::Int64,
-                     )```
+                     )
+```
 
 where type `Chirp` is a custom type with fields of `signal` and `time` both of which are of type `Vector{Float64}`.
 
