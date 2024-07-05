@@ -9,6 +9,7 @@
 # --Using statements
 using FFTW
 using Distributions
+using DSP
 
 ###################################################################################################
 #                                             White Gaussian News                                 #
@@ -26,6 +27,7 @@ Inputs:
 
 """
 function awgn(N::Int64, A::T where {T<:Real})
+    
     mean = 0.0
     std = 1
 
@@ -53,19 +55,34 @@ These group of functions will be meant to emulate colored noise processes
 
 These follow a white noise + filter design
 
+This follows an autoregressive process (ARP) filter which is of order 63
+       _______ 
+      |       |
+----> | noise | ----> filter ----> gain
+      |_______|
+
 """
 function red_noise(N::Int64, A::T where {T<:Real})
 
     # --Create white noise data vector
-        noise = awgn(N, A)
+    noise = awgn(N, A)
 
     # --Filter that data to make colored noise
+    a = vec(zeros(1, 255))
+    a[1] = 1
+    i = collect(range(2, length(a)))
+    a[i] .= (0.3 .+ i .- 1) .* (a[i.-1] ./ i)
+    filter_design = DSP.PolynomialRatio(vec(a), vec([1]))
 
-    return noise::Vector{Float64}
+    # --Color the noise
+    colored_noise = DSP.filt(filter_design, noise)
+
+    return colored_noise::Vector{Float64}
 end
 
 ###################################################################################################
 #
 ###################################################################################################
+
 
 

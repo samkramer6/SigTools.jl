@@ -2,8 +2,6 @@
 
 This is Julia SigTools, a digital signal processing toolbox that was made to fill the gaps of other toolboxes. and streamline signal processing coding.
 
-[![Build Status](https://github.com/samkramer6/SigTools.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/samkramer6/SigTools.jl/actions/workflows/CI.yml?query=branch%3Amain)
-
 ## Signal Generation
 
 SigTools.jl comes with multiple different signal generation tools which can be used to create standard signals.
@@ -13,12 +11,12 @@ SigTools.jl comes with multiple different signal generation tools which can be u
 - Comes in a form of logarithmic or linear sweeps
 
 ```julia
-signal::Chirp = chirp(f_start::T where T<: Real, 
-                      f_stop::T where T<: Real, 
-                      T::T where T<: Real, 
-                      cycles::Int64, 
-                      type::String,
-                      fs::Int64,
+signal::Chirp = chirp(f_start::T where T<: Real,        # Start Frequency 
+                      f_stop::T where T<: Real,         # End Frequency 
+                      T::T where T<: Real,              # Period (s) 
+                      cycles::Int64,                    # Number of cycles 
+                      type::String,                     # F sweep type
+                      fs::Int64,                        # Sample Rate 
                      )
 ```
 
@@ -35,6 +33,24 @@ Passing `type::String = "Linear"` will create a linear frequency sweep pattern, 
 ### Gaussian Pulse
 
 ## Noise Generation
+
+SigTools.jl comes with different types of noise generation tools which come prepackaged or can be edited and customized. There are differnt types of colored and white noise genreators available. All of which are mean-zero and Gaussian.
+
+### White Gaussian Noise
+```julia
+noise::Vector{Float64} = awgn(N::Int64,                   # Number of points in vector
+                              A::T where {T <: Real},     # Amplitude of noise
+                             ) 
+
+noise::Vector{Float64} = white_noise(σ::T where {T<:Real},        # Amplitude Offset 
+                                     N::Int64,                    # Number of points in vector 
+                                     A::T where {T<:Real},        # Amplitude of noise
+                                    )
+```
+
+These are the white noise generation functions provided by SigTools. `awgn()` is for mean-zero gaussian noise of a specified amplitude and length. `white_noise()` allows you to specify a mean as the amplitude offset as σ. Both provide a flat power spectral density characteristic of white noise.
+
+### Colored Noise
 
 ## Utility Functions
 
