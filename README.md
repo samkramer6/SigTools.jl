@@ -38,8 +38,8 @@ SigTools.jl comes with different types of noise generation tools which come prep
 
 ### White Gaussian Noise
 ```julia
-noise::Vector{Float64} = awgn(N::Int64,                   # Number of points in vector
-                              A::T where {T <: Real},     # Amplitude of noise
+noise::Vector{Float64} = awgn(N::Int64,                           # Number of points in vector
+                              A::T where {T <: Real},             # Amplitude of noise
                              ) 
 
 noise::Vector{Float64} = white_noise(σ::T where {T<:Real},        # Amplitude Offset 
@@ -51,6 +51,8 @@ noise::Vector{Float64} = white_noise(σ::T where {T<:Real},        # Amplitude O
 These are the white noise generation functions provided by SigTools. `awgn()` is for mean-zero gaussian noise of a specified amplitude and length. `white_noise()` allows you to specify a mean as the amplitude offset as σ. Both provide a flat power spectral density characteristic of white noise.
 
 ### Colored Noise
+
+Colored noise follows a white noise generation and filter process. This process is outlined Xu, Chang,\*An Easy Algorithm to Generate Colored Noise Sequences*, The Astronomical Journal, 2019. This function uses an Auto Regressive process by involving trucation of impulse response coefficients convolved with white noise. The filter order is 255.
 
 ## Utility Functions
 

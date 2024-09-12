@@ -49,5 +49,12 @@ export Poisson
 
 include("noise.jl")
 export awgn
+export white_noise
+export red_noise
+
+include("walsh.jl")
+export hadamard
+export sync_code
+export asynch_code
 
 end

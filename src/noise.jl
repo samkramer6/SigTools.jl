@@ -27,7 +27,7 @@ Inputs:
 
 """
 function awgn(N::Int64, A::T where {T<:Real})
-    
+
     mean = 0.0
     std = 1
 

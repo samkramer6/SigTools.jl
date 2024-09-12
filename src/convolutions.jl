@@ -1,6 +1,6 @@
 #=  convolutions.jl
     Convolutions Functions
-    
+
 
     Basic defintions for convolutions for vectors and matrices.
 =#
@@ -14,24 +14,24 @@ using Test
 
 function conv(x::AbstractMatrix, y::AbstractMatrix)
 
-    (x, y) = same_length(x, y);
+    (x, y) = same_length(x, y)
 
-    f_x = fft(x);
-    f_y = fft(y);
+    f_x = fft(x)
+    f_y = fft(y)
 
-    @inbounds conv2_xy = real.(ifft(f_x .* f_y));
+    @inbounds conv2_xy = real.(ifft(f_x .* f_y))
 
     return conv2_xy::Matrix{Float64}
 end
 
 function conv(x::Matrix{Float64}, y::Matrix{Float64})
 
-    (x, y) = same_length(x, y);
+    (x, y) = same_length(x, y)
 
-    f_x = fft(x);
-    f_y = fft(y);
+    f_x = fft(x)
+    f_y = fft(y)
 
-    @inbounds conv2_xy = real.(ifft(f_x .* f_y));
+    @inbounds conv2_xy = real.(ifft(f_x .* f_y))
 
     return conv2_xy::Matrix{Float64}
 end
@@ -42,36 +42,36 @@ end
 
 function conv(x::Vector{Int64}, y::Vector{Int64})
 
-    (x, y) = same_length(x, y);
+    (x, y) = same_length(x, y)
 
-    f_x = fft(x);
-    f_y = fft(y);
+    f_x = fft(x)
+    f_y = fft(y)
 
-    @inbounds conv_xy = real.(ifft(f_x .* f_y));
+    @inbounds conv_xy = real.(ifft(f_x .* f_y))
 
     return conv_xy::Vector{Float64}
 end
 
 function conv(x::Vector{Float64}, y::Vector{Float64})
 
-    (x, y) = same_length(x, y);
+    (x, y) = same_length(x, y)
 
-    f_x = fft(x);
-    f_y = fft(y);
+    f_x = fft(x)
+    f_y = fft(y)
 
-    @inbounds conv_xy = real.(ifft(f_x .* f_y));
+    @inbounds conv_xy = real.(ifft(f_x .* f_y))
 
     return conv_xy::Vector{Float64}
 end
 
 function conv(x::AbstractVector, y::AbstractVector)
 
-    (x, y) = same_length(x, y);
+    (x, y) = same_length(x, y)
 
-    f_x = fft(x);
-    f_y = fft(y);
+    f_x = fft(x)
+    f_y = fft(y)
 
-    @inbounds conv_xy = real.(ifft(f_x .* f_y));
+    @inbounds conv_xy = real.(ifft(f_x .* f_y))
 
     return conv_xy::AbstractVector
 end
@@ -86,16 +86,16 @@ function same_length(x::AbstractVector, y::AbstractVector)
         return x, y
     end
 
-    leng_diff = abs.(length(x) - length(y));
-    pad = vec(zeros(typeof(x[1]), 1, leng_diff));
+    leng_diff = abs.(length(x) - length(y))
+    pad = vec(zeros(typeof(x[1]), 1, leng_diff))
 
     if length(x) > length(y)
 
-        @inbounds append!(y, pad);
+        @inbounds append!(y, pad)
 
     elseif length(y) > length(x)
 
-        @inbounds append!(x, pad);
+        @inbounds append!(x, pad)
 
     end
 
@@ -108,16 +108,16 @@ function same_length(x::Vector{Float64}, y::Vector{Float64})
         return x, y
     end
 
-    leng_diff = abs.(length(x) - length(y));
-    pad = vec(zeros(Float64, 1, leng_diff));
+    leng_diff = abs.(length(x) - length(y))
+    pad = vec(zeros(Float64, 1, leng_diff))
 
     if length(x) > length(y)
 
-        @inbounds append!(y, pad);
+        @inbounds append!(y, pad)
 
     elseif length(y) > length(x)
 
-        @inbounds append!(x, pad);
+        @inbounds append!(x, pad)
 
     end
 
@@ -128,116 +128,116 @@ end
 #                            2D same_length()                          #
 ########################################################################
 
-function same_length(x::Matrix{T} where T <: Real, y::Matrix{T} where T<: Real)
-    
-	# --Test
-		if size(x) == size(y)
-        	return x::AbstractMatrix, y::AbstractMatrix
-    	end
+function same_length(x::Matrix{T} where {T<:Real}, y::Matrix{T} where {T<:Real})
 
-	# --Plan Height
-    	height_plan = size(larger(x, y, 1), 1);
-    	width_plan = size(larger(x, y, 2), 2);
+    # --Test
+    if size(x) == size(y)
+        return x::AbstractMatrix, y::AbstractMatrix
+    end
 
-	# --Heigth Padding
-		height_diff = abs.(height_plan - size(smaller(x, y, 1), 1));
-		height_pad = zeros(height_diff, size(smaller(x, y, 1), 2));
-	
-		if length(height_pad) != 0
+    # --Plan Height
+    height_plan = size(larger(x, y, 1), 1)
+    width_plan = size(larger(x, y, 2), 2)
 
-            @inbounds a = vcat(smaller(x, y, 1), height_pad);
-            b = larger(x, y, 1);
+    # --Heigth Padding
+    height_diff = abs.(height_plan - size(smaller(x, y, 1), 1))
+    height_pad = zeros(height_diff, size(smaller(x, y, 1), 2))
 
-    	elseif length(height_pad) == 0
+    if length(height_pad) != 0
 
-            a = x;
-            b = y;
+        @inbounds a = vcat(smaller(x, y, 1), height_pad)
+        b = larger(x, y, 1)
 
-    	end
+    elseif length(height_pad) == 0
 
-	# --Width Padding
-		width_diff = abs.(width_plan - size(smaller(x, y, 2), 2));
-		width_pad = zeros(width_diff, size(smaller(x, y, 2), 1));
-	
-		if length(width_pad) != 0
-			
-			pad = zeros(height_plan, width_diff);
-			@inbounds c = hcat(smaller(a, b, 2), pad);
-			d = larger(a, b, 2);
-			
-			
-		elseif length(width_pad) == 0
+        a = x
+        b = y
 
-			c = a;
-			d = b;
+    end
 
-		end
+    # --Width Padding
+    width_diff = abs.(width_plan - size(smaller(x, y, 2), 2))
+    width_pad = zeros(width_diff, size(smaller(x, y, 2), 1))
 
-	if size(c) == size(d)
-		return c::AbstractMatrix, d::AbstractMatrix
-	else
-		(c, d) == same_length(c, d);
-	end
+    if length(width_pad) != 0
+
+        pad = zeros(height_plan, width_diff)
+        @inbounds c = hcat(smaller(a, b, 2), pad)
+        d = larger(a, b, 2)
+
+
+    elseif length(width_pad) == 0
+
+        c = a
+        d = b
+
+    end
+
+    if size(c) == size(d)
+        return c::AbstractMatrix, d::AbstractMatrix
+    else
+        (c, d) == same_length(c, d)
+    end
 end
 
 function same_length(x::Matrix{Float64}, y::Matrix{Float64})
 
-	# --Test
-		if size(x) == size(y)
-            return x::Matrix{Float64}, y::Matrix{Float64}
-        end
+    # --Test
+    if size(x) == size(y)
+        return x::Matrix{Float64}, y::Matrix{Float64}
+    end
 
-	# --Plan Height
-        height_plan = size(larger(x, y, 1), 1);
-        width_plan = size(larger(x, y, 2), 2);
+    # --Plan Height
+    height_plan = size(larger(x, y, 1), 1)
+    width_plan = size(larger(x, y, 2), 2)
 
-	# --Heigth Padding
-        height_diff = abs.(height_plan - size(smaller(x, y, 1), 1));
-	    height_pad = zeros(height_diff, size(smaller(x, y, 1), 2));
-	
-		if length(height_pad) != 0
+    # --Heigth Padding
+    height_diff = abs.(height_plan - size(smaller(x, y, 1), 1))
+    height_pad = zeros(height_diff, size(smaller(x, y, 1), 2))
 
-            @inbounds a = vcat(smaller(x, y, 1), height_pad);
-            b = larger(x, y, 1);
-    
-        elseif length(height_pad) == 0
+    if length(height_pad) != 0
 
-            a = x;
-            b = y;
+        @inbounds a = vcat(smaller(x, y, 1), height_pad)
+        b = larger(x, y, 1)
 
-        end
+    elseif length(height_pad) == 0
 
-	# --Width Padding
-		width_diff = abs.(width_plan - size(smaller(x, y, 2), 2));
-		width_pad = zeros(width_diff, size(smaller(x, y, 2), 1));
-	
-		if length(width_pad) != 0
-			
-			pad = zeros(height_plan, width_diff);
-		    @inbounds c = hcat(smaller(a, b, 2), pad);
-			d = larger(a, b, 2);
-			
-			
-		elseif length(width_pad) == 0
+        a = x
+        b = y
 
-			c = a;
-			d = b;
+    end
 
-		end
+    # --Width Padding
+    width_diff = abs.(width_plan - size(smaller(x, y, 2), 2))
+    width_pad = zeros(width_diff, size(smaller(x, y, 2), 1))
 
-	if size(c) == size(d)
-		return c::Matrix{Float64}, d::Matrix{Float64}
-	else
-		(c, d) == same_length(c, d);
-	end
+    if length(width_pad) != 0
+
+        pad = zeros(height_plan, width_diff)
+        @inbounds c = hcat(smaller(a, b, 2), pad)
+        d = larger(a, b, 2)
+
+
+    elseif length(width_pad) == 0
+
+        c = a
+        d = b
+
+    end
+
+    if size(c) == size(d)
+        return c::Matrix{Float64}, d::Matrix{Float64}
+    else
+        (c, d) == same_length(c, d)
+    end
 end
 
 function same_length(x::Matrix{Int64}, y::Matrix{Int64})
 
-    x = convert(Matrix{Float64}, x);
-    y = convert(Matrix{Float64}, y);
+    x = convert(Matrix{Float64}, x)
+    y = convert(Matrix{Float64}, y)
 
-    (x, y) = same_length(x, y);
+    (x, y) = same_length(x, y)
 
     return x::Matrix{Float64}, y::Matrix{Float64}
 end
@@ -252,7 +252,7 @@ function larger(x::AbstractVector, y::AbstractVector)
         return x::AbstractVector
     elseif length(y) > length(x)
         return y::AbstractVector
-    else 
+    else
         return x::AbstractVector
     end
 
@@ -267,7 +267,7 @@ function larger(x::AbstractMatrix, y::AbstractMatrix, n::Int64)
     else
         return x::AbstractMatrix
     end
-    
+
 end
 
 function larger(x::AbstractArray, y::AbstractArray, n::Int64)
@@ -279,7 +279,7 @@ function larger(x::AbstractArray, y::AbstractArray, n::Int64)
     else
         return x::AbstractArray
     end
-    
+
 end
 
 

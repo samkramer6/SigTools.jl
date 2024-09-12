@@ -36,11 +36,11 @@ function chirp(
 )
 
     # --Find fs needed
-    const fs = maximum([f_start, f_stop]) .* 1000
-    const cycles = 1;
+    fs = maximum([f_start, f_stop]) .* 1000
+    cycles = 1
 
     # --Define time vector
-    const time = vec(collect(0:(1 / fs):(T / cycles - 1 / fs)))
+    time = vec(collect(0:(1/fs):(T/cycles-1/fs)))
 
     # --Define frequency vector
     if uppercase(type) == "LOGARITHMIC" || uppercase(type) == "LOG"
@@ -65,10 +65,10 @@ function chirp(
 )
 
     # --Find fs needed
-    const fs = maximum([f_start, f_stop]) .* 1000
+    fs = maximum([f_start, f_stop]) .* 1000
 
     # --Define time vector
-    const time = vec(collect(0:(1 / fs):(T / cycles - 1 / fs)))
+    time = vec(collect(0:(1/fs):(T/cycles-1/fs)))
 
     # --Define frequency vector
     if uppercase(type) == "LOGARITHMIC" || uppercase(type) == "LOG"
@@ -79,7 +79,7 @@ function chirp(
 
     # -- Define the chirp and time vector
     chirp_signal::Vector{Float64} = cos.(f .* time)
-        Iterators.flatten(Iterators.repeated(append!(chirp_signal, chirp_signal), cycles));
+    Iterators.flatten(Iterators.repeated(append!(chirp_signal, chirp_signal), cycles))
     time_out::Vector{Float64} = vec(LinRange(0, T, length(chirp_signal)))
 
     return Chirp(chirp_signal, time_out)
@@ -94,7 +94,7 @@ function chirp(
     fs::Int64,
 )
     # --Define time vector
-    const time = vec(collect(0:(1 / fs):(T / cycles - 1 / fs)))
+    time = vec(collect(0:(1/fs):(T/cycles-1/fs)))
 
     # --Define frequency vector
     if uppercase(type) == "LOGARITHMIC" || uppercase(type) == "LOG"
@@ -105,7 +105,7 @@ function chirp(
 
     # -- Define the chirp and time vector
     chirp_signal::Vector{Float64} = cos.(f .* time)
-        Iterators.flatten(Iterators.repeated(append!(chirp_signal, chirp_signal), cycles));
+    Iterators.flatten(Iterators.repeated(append!(chirp_signal, chirp_signal), cycles))
     time_out::Vector{Float64} = vec(LinRange(0, T, length(chirp_signal)))
 
     return Chirp(chirp_signal, time_out)
