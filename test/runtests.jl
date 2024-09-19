@@ -46,8 +46,8 @@ println(running_tests_message)
   @test size(e, 2) == size(f, 2)
 
   # --Convolutions
-  @test_nowarn conv(c, d)
-  @test_nowarn conv(a, b)
+  @test_nowarn convol(c, d)
+  @test_nowarn convol(a, b)
 
 end
 

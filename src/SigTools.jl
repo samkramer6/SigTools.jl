@@ -4,7 +4,7 @@ include("convolutions.jl")
 export same_length
 export smaller
 export larger
-export conv
+export convol
 
 include("package_greet.jl")
 export package_greet
@@ -39,22 +39,28 @@ export gaussian
 include("windows.jl")
 export rectangular_window
 export triangle_window
-export Hann
-export Hamming
-export Blackman
-export Riesz
-export Riemann
-export Tukey
-export Poisson
+export hann
+export hamming
+export blackman
+export riesz
+export riemann
+export tukey
+export poisson
 
 include("noise.jl")
 export awgn
 export white_noise
 export red_noise
+export pink_noise
+export voss_noise
 
 include("walsh.jl")
 export hadamard
 export sync_code
 export asynch_code
+
+include("psd.jl")
+export psd
+export welch
 
 end

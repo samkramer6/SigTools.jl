@@ -12,7 +12,7 @@ using Test
 #                           2D Convolutions                            #
 ########################################################################
 
-function conv(x::AbstractMatrix, y::AbstractMatrix)
+function convol(x::AbstractMatrix, y::AbstractMatrix)
 
     (x, y) = same_length(x, y)
 
@@ -24,7 +24,7 @@ function conv(x::AbstractMatrix, y::AbstractMatrix)
     return conv2_xy::Matrix{Float64}
 end
 
-function conv(x::Matrix{Float64}, y::Matrix{Float64})
+function convol(x::Matrix{Float64}, y::Matrix{Float64})
 
     (x, y) = same_length(x, y)
 
@@ -40,7 +40,7 @@ end
 #                           1D Convolutions                            #
 ########################################################################
 
-function conv(x::Vector{Int64}, y::Vector{Int64})
+function convol(x::Vector{Int64}, y::Vector{Int64})
 
     (x, y) = same_length(x, y)
 
@@ -52,7 +52,7 @@ function conv(x::Vector{Int64}, y::Vector{Int64})
     return conv_xy::Vector{Float64}
 end
 
-function conv(x::Vector{Float64}, y::Vector{Float64})
+function convol(x::Vector{Float64}, y::Vector{Float64})
 
     (x, y) = same_length(x, y)
 
@@ -64,7 +64,7 @@ function conv(x::Vector{Float64}, y::Vector{Float64})
     return conv_xy::Vector{Float64}
 end
 
-function conv(x::AbstractVector, y::AbstractVector)
+function convol(x::AbstractVector, y::AbstractVector)
 
     (x, y) = same_length(x, y)
 
