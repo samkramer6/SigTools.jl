@@ -63,4 +63,8 @@ include("psd.jl")
 export psd
 export welch
 
+include("filters.jl")
+include("fresponse.jl")
+
+
 end
