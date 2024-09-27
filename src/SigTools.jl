@@ -1,10 +1,8 @@
 module SigTools
 
 include("convolutions.jl")
-export same_length
-export smaller
-export larger
 export convol
+export deconvol
 
 include("package_greet.jl")
 export package_greet
@@ -63,8 +61,22 @@ include("psd.jl")
 export psd
 export welch
 
+#TODO: Filter and frequency response functions
 include("filters.jl")
 include("fresponse.jl")
 
+include("image_processing/edge_detection.jl")
+export sobel
+export prewitt
+export roberts
+
+include("utils/same_length.jl")
+export same_length
+
+include("utils/larger.jl")
+export larger
+
+include("utils/smaller.jl")
+export smaller
 
 end
