@@ -14,25 +14,25 @@ Sam Kramer
 """
 function larger(x::Vector{T} where {T<:Real}, y::Vector{T} where {T<:Real})
 
-  if length(x) > length(y)
-    return x::AbstractVector
-  elseif length(y) > length(x)
-    return y::AbstractVector
-  else
-    return x::AbstractVector
-  end
+    if length(x) > length(y)
+        return x::AbstractVector
+    elseif length(y) > length(x)
+        return y::AbstractVector
+    else
+        return x::AbstractVector
+    end
 
 end
 
 function larger(x::Matrix{T} where {T<:Real}, y::Matrix{T} where {T<:Real}, n::Int64)
 
-  if size(x, n) > size(y, n)
-    return x::AbstractArray
-  elseif size(y, n) > size(x, n)
-    return y::AbstractArray
-  else
-    return x::AbstractArray
-  end
+    if size(x, n) > size(y, n)
+        return x::AbstractArray
+    elseif size(y, n) > size(x, n)
+        return y::AbstractArray
+    else
+        return x::AbstractArray
+    end
 
 end
 
