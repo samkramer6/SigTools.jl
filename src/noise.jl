@@ -14,7 +14,7 @@ Inputs:
 
 Sam Kramer
 """
-function awgn(N::Int64, A::T where {T<:Real})
+@inline function awgn(N::Int64, A::T where {T<:Real})
 
     mean = 0.0
     std = 1
@@ -32,7 +32,7 @@ This function is meant to simulate additive white Gaussian noise in data sets. I
 centered at σ of specified length N.
 
 Inputs:
-    σ::Real -- The center of the noise. 
+    σ::Real -- The center of the noise.
     N::Int64 -- Number of data points needed to be returned by the data set
     A::Float64 -- Absolute value of the amplitude of the maximum values
 
@@ -55,23 +55,19 @@ These group of functions will be meant to emulate colored noise processes
 These follow a white noise + filter design
 
 This follows an autoregressive process (ARP) filter which is of order 63
-       _______ 
-      |       |
-----> | noise | ----> filter ----> gain
-      |_______|
 
-Sam Kramer 
+Sam Kramer
 """
 function red_noise(N::Int64, A::T where {T<:Real})
 
     # --Create white noise data vector
-    noise = awgn(N, A)
+    @inline noise = awgn(N, A)
 
     # --Filter that data to make colored noise
-    a = vec(zeros(1, 255))
+    a = vec(zeros(1, 63))
     a[1] = 1
     i = collect(range(2, length(a)))
-    a[i] .= (0.3 .+ i .- 1) .* (a[i.-1] ./ i)
+    @inbounds a[i] .= (0.3 .+ i .- 1) .* (a[i .- 1] ./ i)
     filter_design = DSP.PolynomialRatio(vec(a), vec([1]))
 
     # --Color the noise
@@ -92,11 +88,10 @@ Output:
     pink_noise::Vector{Float64}
 
 Sam Kramer
-
 """
-function pink_noise(N::Int64, A::T where {T<:Real})
+function deep_red_noise(N::Int64, A::T where {T<:Real})
 
-    # --Create white noise data vector 
+    # --Create white noise data vector
     noise = awgn(N, A)
 
     # --Design Pinkening filter
@@ -104,7 +99,7 @@ function pink_noise(N::Int64, A::T where {T<:Real})
     pole = [0.99572754, 0.94790649, 0.53567505]
     filter_design = DSP.ZeroPoleGain(zero, pole, 1.0)
 
-    # --filter data 
+    # --filter data
     pink_noise = DSP.filt(filter_design, noise)
 
     return pink_noise::Vector{Float64}
@@ -122,33 +117,33 @@ Output:
     pink_noise::Vector{Float64}
 
 Sam Kramer
-
 """
 function voss_noise(N::Int64, A::T where {T<:Real})
 
-    row_0 = awgn(N, 1.0)
+    @inline row_0 = awgn(N, 1.0)
     row_1 = vec(zeros(Float64, 1, N))
     row_2 = vec(zeros(Float64, 1, N))
     row_3 = vec(zeros(Float64, 1, N))
     row_4 = vec(zeros(Float64, 1, N))
-    rand_start::Int64 = rand(1:N/2)
+    rand_start::Int64 = rand(1:(N / 2))
 
     for i in collect(range(1, N - 17))
 
         if rem(i, 2) == 0
-            row_1[i:i+1] = row_0[rand_start:rand_start+1]
+            @inbounds row_1[i:(i + 1)] = row_0[rand_start:(rand_start + 1)]
         elseif rem(i, 4) == 0
-            row_2[i:i+3] = row_0[rand_start:rand_start+3]
+            @inbounds row_2[i:(i + 3)] = row_0[rand_start:(rand_start + 3)]
         elseif rem(i, 8) == 0
-            row_3[i:i+7] = row_0[rand_start:rand_start+7]
+            @inbounds row_3[i:(i + 7)] = row_0[rand_start:(rand_start + 7)]
         elseif rem(i, 16) == 0
-            row_4[i:i+15] = row_0[rand_start:rand_start+15]
+            @inbounds row_4[i:(i + 15)] = row_0[rand_start:(rand_start + 15)]
         end
 
     end
 
     noise_output = row_0 .+ row_1 .+ row_2 .+ row_3 .+ row_4
     noise_output = A .* sqrt.(mean.(noise_output .^ 2 ./ maximum(noise_output)))
+    noise_output = noise_output .- mean(noise_output)
 
     return noise_output::Vector{Float64}
 end

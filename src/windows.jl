@@ -6,26 +6,15 @@
     Sam Kramer, May 2024
 =#
 
-using JET
-using Test
-
-#########################################################################################
-#                                         Source Code                                   #
-#########################################################################################
-
 #NOTE: BASIC FUNCTIONS
 """
-SigTools windows.jl
+SigTools.jl windows.jl
 
-Basic Windowing Functions:
-    Rectangular window (Dirichlet)
-    Triangular window (Bartlet)
+This function will create a rectangular window function over length N where n_[0,N] = 0 and the rest are equal to 1.
 
 Sam Kramer
 """
-
-# --Basic Windowing function
-function rectangular_window(N::Int64)
+@inline function rectangular_window(N::Int64)
 
     duty_cycle = ones(Float64, 1, N - 2)
     window = append!(vec([0.0]), duty_cycle)
@@ -34,14 +23,22 @@ function rectangular_window(N::Int64)
     return window::Vector{Float64}
 end
 
-# --Triangular windowing function
-function triangle_window(N::Int64)
+"""
+SigTools.jl windows.jl
+
+This function creates a triangular window function of length N from 0 to 1.
+
+Sam Kramer
+"""
+@inline function triangle_window(N::Int64)
 
     duty_cycle = collect(LinRange(0.2, 1, floor(Int64, N / 2)))
     window = append!(duty_cycle, reverse(duty_cycle))
 
-    if length(window) != N
-        window = append!(window, 0.2)
+    if length(window) < N
+        append!(window, 0.2)
+    elseif length(window) > N
+        pop!(window)
     end
 
     return window::Vector{Float64}
@@ -49,17 +46,17 @@ end
 
 #NOTE: MATHEMATIC WINDOW FUNCTIONS
 """
-SigTools windows.jl
+SigTools.jl windows.jl
 
-Mathematic Window Functions:
-    Hann
-    Hamming
-    Blackman
+This function is will create a hann window around your selected data of length N. A Hann window is a sine windowing function. 
+
+Inputs:
+    N::Int64 == Length of vector output
+    α::Int64 == Power of the sine function of the window
 
 Sam Kramer
 """
-# --Hann window
-function hann(N::Int64, α::Int64)
+@inline function hann(N::Int64, α::Int64)
 
     x = collect(LinRange(0, 1, N))
     window = sin.(π .* x) .^ α
@@ -67,8 +64,14 @@ function hann(N::Int64, α::Int64)
     return window::Vector{Float64}
 end
 
-# --Hamming window
-function hamming(N::Int64)
+"""
+SigTools.jl windows.jl
+
+This function will create a Hamming window of length N.
+
+Sam Kramer
+"""
+@inline function hamming(N::Int64)
 
     x = collect(LinRange(0, 1, N))
     window = 0.54 .- 0.46 .* cos.(2 .* π .* x)
@@ -76,8 +79,14 @@ function hamming(N::Int64)
     return window::Vector{Float64}
 end
 
-# --Blackman window function
-function blackman(N::Int64)
+"""
+SigTools.jl windows.jl
+
+This function will create a Blackman window of length N.
+
+Sam Kramer
+"""
+@inline function blackman(N::Int64)
 
     x = collect(LinRange(-0.5, 0.5, N))
     window = 0.42 .+ 0.50 .* cos.(2 .* π .* x) .+ 0.08 .* cos.(4 .* π .* x)
@@ -89,16 +98,11 @@ end
 """
 SigTools windows.jl
 
-Constructed Windows
-    Riesz 
-    Riemann
-    Tukey
-    Poisson
+This function creates a constructed Riesz windowing function of length N.
 
 Sam Kramer
 """
-# --Riesz window function
-function riesz(N::Int64)
+@inline function riesz(N::Int64)
 
     x = collect(LinRange(0, 0.5, floor(Int64, N / 2)))
     window = 1.0 .- abs.(2 .* x) .^ 2
@@ -111,8 +115,14 @@ function riesz(N::Int64)
     return window::Vector{Float64}
 end
 
-# --Riemann window function 
-function riemann(N::Int64)
+"""
+SigTools.jl windows.jl
+
+This function will generate a constructed Riemann function of length N.
+
+Sam Kramer
+"""
+@inline function riemann(N::Int64)
 
     x = collect(LinRange(0, 0.5, floor(Int64, N / 2)))
     window = sin.(2 .* π .* x) ./ (2 .* π .* x)
@@ -125,8 +135,18 @@ function riemann(N::Int64)
     return window::Vector{Float64}
 end
 
-# --Tukey window function
-function tukey(N::Int64, α::Float64)
+"""
+SigTools.jl windows.jl
+
+This function will generate a constructed Tukey winodw of length N with shape function of α.
+
+Inputs:
+    N::Int64 == Length of the output vector.
+    α::Float64 == Shape vector of Tukey window function
+
+Sam Kramer
+"""
+@inline function tukey(N::Int64, α::Float64)
 
     # --Check if α < N
     if α > 1.0
@@ -150,8 +170,18 @@ function tukey(N::Int64, α::Float64)
     return window::Vector{Float64}
 end
 
-# --Poisson window function
-function poisson(N::Int64, α::Float64)
+"""
+SigTools.jl windows.jl
+
+This is a function that will create a constructed Poisson windowing function of length N and shape α
+
+Inputs:
+    N::Int64 == Length of the output vector
+    α::Float64 == Shape function of the window
+
+Sam Kramer
+"""
+@inline function poisson(N::Int64, α::Float64)
 
     x = collect(1:round(N / 2))
     window = exp.(-α .* abs.(x) ./ (N / 2))
@@ -166,5 +196,3 @@ function poisson(N::Int64, α::Float64)
 
     return window::Vector{Float64}
 end
-
-

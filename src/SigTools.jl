@@ -49,26 +49,26 @@ include("noise.jl")
 export awgn
 export white_noise
 export red_noise
-export pink_noise
+export deep_red_noise
 export voss_noise
-
-include("walsh.jl")
-export hadamard
-export sync_code
-export asynch_code
 
 include("psd.jl")
 export psd
 export welch
 
 #TODO: Filter and frequency response functions
-include("filters.jl")
+include("filters.jl")  
 include("fresponse.jl")
 
 include("image_processing/edge_detection.jl")
 export sobel
 export prewitt
 export roberts
+
+include("utils/walsh.jl")
+export hadamard
+export sync_code
+export asynch_code
 
 include("utils/same_length.jl")
 export same_length

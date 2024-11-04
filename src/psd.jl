@@ -2,6 +2,7 @@
 using FFTW
 using .SigTools
 
+#TEST: This function needs to be tested
 """ SigTools.jl psd.jl
 
 This is a function that is used to compute the Power Spectral Density of a signal in the dB scale. Data is windowed using a Cos^2(x) window.
@@ -26,7 +27,9 @@ function psd(data::Vector{T} where {T<:Real})
     return (20 .* log10.(psd_data))::Vector{Float64}
 end
 
-""" SigTools.jl psd.jl
+#TEST: This function needs to be tested
+""" 
+SigTools.jl psd.jl
 
 This function gives a welch approximation of the PSD using the Welch 1967, "The Use of Fast Fourier Transform for the Estimation of Power Spectra" paper. It autodefaults to 8 separate sections with largest possible length.
 
@@ -37,7 +40,6 @@ Outputs:
     psd_out::Vector{Float64} == The welch approximation of the PSD of the data returned in dB.
 
 Sam Kramer
-
 """
 function welch(data::Vector{T} where {T<:Real})
 
@@ -52,10 +54,10 @@ function welch(data::Vector{T} where {T<:Real})
 
 
         if (i * overlap + L) > length(data)
-            @inbounds d_window = vec(data[(i * overlap + 1):length(data)])
+            @inbounds d_window = vec(data[(i*overlap+1):length(data)])
             @inbounds d_window = d_window .* hamming(length(d_window))
         else
-            @inbounds d_window = vec(data[(i * overlap + 1):(i * overlap + L)] .* W)
+            @inbounds d_window = vec(data[(i*overlap+1):(i*overlap+L)] .* W)
         end
 
         if i === 0
